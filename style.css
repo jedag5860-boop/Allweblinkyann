@@ -1,0 +1,373 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: black; /* latar belakang hitam */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Canvas partikel di belakang konten */
+#particleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none; /* biar tidak mengganggu klik */
+}
+
+/* Login Container */
+.login-container {
+    background: rgba(30, 30, 30, 0.9); /* gelap transparan */
+    backdrop-filter: blur(5px);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.login-container h2 {
+    margin-bottom: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #444;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    background: #222;
+    color: #fff;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 20px;
+}
+
+.login-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.error-message {
+    color: #e74c3c;
+    margin-top: 15px;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+/* Main App (hidden initially) */
+.main-app {
+    width: 100%;
+    max-width: 1200px;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    position: relative;
+    display: none;
+    animation: slideUp 0.5s ease;
+    z-index: 1;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.header {
+    background: rgba(30, 30, 30, 0.95);
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    border-bottom: 1px solid #333;
+}
+
+.menu-toggle {
+    font-size: 28px;
+    cursor: pointer;
+    color: #fff;
+    margin-right: 20px;
+    transition: color 0.3s;
+    display: none; /* hidden by default, shown only for admin */
+}
+
+.menu-toggle:hover {
+    color: #667eea;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    flex: 1;
+}
+
+.user-info {
+    font-size: 16px;
+    color: #ddd;
+    background: #333;
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid #444;
+}
+
+/* Grid Cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 30px;
+}
+
+.card {
+    background: rgba(40, 40, 40, 0.9);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    word-wrap: break-word;
+    animation: cardAppear 0.4s ease;
+    position: relative;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+    border-color: #667eea;
+}
+
+.card a {
+    text-decoration: none;
+    color: #bbd9ff;
+    font-weight: 500;
+    display: block;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+.card p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #fff;
+}
+
+/* Admin actions on card */
+.card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.card:hover .card-actions {
+    opacity: 1;
+}
+
+.card-actions button {
+    background: #333;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    color: #fff;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid #555;
+}
+
+.card-actions .edit-btn:hover {
+    background: #667eea;
+    color: white;
+}
+
+.card-actions .delete-btn:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+@keyframes cardAppear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -350px;
+    width: 320px;
+    height: 100vh;
+    background: #1e1e1e;
+    box-shadow: 5px 0 20px rgba(0,0,0,0.7);
+    transition: left 0.3s ease;
+    padding: 30px 20px;
+    z-index: 1000;
+    overflow-y: auto;
+    border-right: 1px solid #333;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar h3 {
+    margin-bottom: 25px;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.sidebar .form-group {
+    margin-bottom: 20px;
+}
+
+.sidebar label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #ccc;
+}
+
+.sidebar input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #444;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.sidebar input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 10px;
+}
+
+.sidebar button:hover {
+    opacity: 0.9;
+}
+
+.sidebar .cancel-btn {
+    background: #555;
+    margin-top: 10px;
+}
+
+.sidebar .cancel-btn:hover {
+    background: #666;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 999;
+    display: none;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 20px;
+    }
+    .cards-grid {
+        padding: 20px;
+        gap: 15px;
+    }
+    .sidebar {
+        width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px 20px;
+    }
+    .header {
+        padding: 15px 20px;
+    }
+}
